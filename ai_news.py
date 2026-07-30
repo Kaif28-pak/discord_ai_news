@@ -9,20 +9,16 @@ import random
 load_dotenv()
 
 # ==================== CONFIGURATION ====================
-# Yahan ab direct os.getenv se key utha rahe hain
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
 
-# Agar API key load nahi hui toh script yahin rok dega aur batayega
 if not GEMINI_API_KEY:
     raise ValueError("Error: GEMINI_API_KEY .env file se load nahi hui! Check karein ke asli key daali hai ya nahi.")
 
-# Naye Google GenAI SDK ka client setup
-client = genai.Client(api_key=GEMINI_API_KEY)
-
+# ✅ FIXED: Standard SDK ka sahi syntax API key load karne ke liye
+genai.configure(api_key=GEMINI_API_KEY)
 
 def fetch_ai_news():
-    # 1. Yahan 4 alag alag tech aur coding ki images hain, har baar koi nayi aayegi
     banner_images = [
         "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80",
         "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=800&q=80",
@@ -31,9 +27,9 @@ def fetch_ai_news():
     ]
     selected_image = random.choice(banner_images)
 
-    raw_news_text = "..." # (Aapka RSS fetch karne wala code jo pehle se hai wo waise hi rahega, main sirf prompt update kar raha hoon)
+    # (Aapka RSS fetch karne wala code jo pehle se hai wo yahan aayega)
+    raw_news_text = "..." 
     
-    # 2. Behtareen Prompt (Drama Ignore + Web Dev Tools Focus)
     prompt = f"""
     Tum ek expert Tech Journalist ho.
     
@@ -53,10 +49,10 @@ def fetch_ai_news():
     {raw_news_text}
     """
     
-    response = client.models.generate_content(
-        model='gemini-3.6-flash',
-        contents=prompt,
-    )
+    # ✅ FIXED: Content generate karne ka sahi function aur model name (gemini-1.5-flash sabse fast hai)
+    model = genai.GenerativeModel('gemini-1.5-flash')
+    response = model.generate_content(prompt)
+    
     return response.text
 
 def send_to_discord(message):
