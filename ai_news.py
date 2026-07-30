@@ -2,7 +2,7 @@ import os
 import requests
 import xml.etree.ElementTree as ET
 from dotenv import load_dotenv
-from google import genai
+import google.generativeai as genai
 import random
 
 # .env file load karna
