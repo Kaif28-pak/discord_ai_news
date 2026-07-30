@@ -2,9 +2,8 @@ name: Daily AI News Bot
 
 on:
   schedule:
-    # Yeh script rozana subah 10:00 AM (Pakistani Time) par chalegi
     - cron: '0 5 * * *'
-  workflow_dispatch: # Is se aap manually bhi button daba kar run kar sakenge
+  workflow_dispatch:
 
 jobs:
   run-bot:
@@ -12,10 +11,10 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4   # <-- Yeh v4 hona chahiye
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5 # <-- Yeh v5 hona chahiye
       with:
         python-version: '3.10'
 
